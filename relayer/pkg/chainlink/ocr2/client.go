@@ -11,6 +11,7 @@ import (
 	"github.com/pkg/errors"
 
 	caigogw "github.com/dontpanicdao/caigo/gateway"
+	caigorpc "github.com/dontpanicdao/caigo/rpcv01"
 	caigotypes "github.com/dontpanicdao/caigo/types"
 	"github.com/smartcontractkit/libocr/offchainreporting2/types"
 
@@ -182,28 +183,40 @@ func (c *Client) LinkAvailableForPayment(ctx context.Context, address caigotypes
 }
 
 func (c *Client) fetchEventsFromBlock(ctx context.Context, address caigotypes.Hash, eventType string, blockNum uint64) (eventsAsFeltArrs [][]*caigotypes.Felt, err error) {
-	block, err := c.r.BlockByNumberGateway(ctx, blockNum)
+	block := caigorpc.WithBlockNumber(blockNum)
+
+	events, err := c.r.Events(ctx, caigorpc.EventFilter{
+		FromBlock: block,
+		ToBlock:   block,
+		Address:   address,
+		// Keys:       []string{},
+		// PageSize:   0,
+		// PageNumber: 0,
+	})
+
+	// TODO: check events.isLastPage, query more if needed
+
 	if err != nil {
-		return eventsAsFeltArrs, errors.Wrap(err, "couldn't fetch block by number")
+		return eventsAsFeltArrs, errors.Wrap(err, "couldn't fetch events for block")
 	}
 
-	for _, txReceipt := range block.TransactionReceipts {
-		for _, event := range txReceipt.Events {
-			var decodedEvent caigogw.Event
+	// TODO: use starknet_getEvents and filter fromBlock-toBlock to blockNum, and by address
 
-			m, err := json.Marshal(event)
-			if err != nil {
-				return eventsAsFeltArrs, errors.Wrap(err, "couldn't marshal event")
-			}
+	for _, event := range events.Events {
+		var decodedEvent caigogw.Event
 
-			err = json.Unmarshal(m, &decodedEvent)
-			if err != nil {
-				return eventsAsFeltArrs, errors.Wrap(err, "couldn't unmarshal event")
-			}
+		m, err := json.Marshal(event)
+		if err != nil {
+			return eventsAsFeltArrs, errors.Wrap(err, "couldn't marshal event")
+		}
 
-			if starknet.IsEventFromContract(&decodedEvent, address, eventType) {
-				eventsAsFeltArrs = append(eventsAsFeltArrs, decodedEvent.Data)
-			}
+		err = json.Unmarshal(m, &decodedEvent)
+		if err != nil {
+			return eventsAsFeltArrs, errors.Wrap(err, "couldn't unmarshal event")
+		}
+
+		if starknet.IsEventFromContract(&decodedEvent, address, eventType) {
+			eventsAsFeltArrs = append(eventsAsFeltArrs, decodedEvent.Data)
 		}
 	}
 	if len(eventsAsFeltArrs) == 0 {
