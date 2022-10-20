@@ -2,7 +2,6 @@ package ocr2
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"math/big"
 	"time"
@@ -10,7 +9,6 @@ import (
 	junotypes "github.com/NethermindEth/juno/pkg/types"
 	"github.com/pkg/errors"
 
-	caigogw "github.com/dontpanicdao/caigo/gateway"
 	caigorpc "github.com/dontpanicdao/caigo/rpcv01"
 	caigotypes "github.com/dontpanicdao/caigo/types"
 	"github.com/smartcontractkit/libocr/offchainreporting2/types"
@@ -179,17 +177,19 @@ func (c *Client) LinkAvailableForPayment(ctx context.Context, address caigotypes
 	if len(results) != 1 {
 		return nil, errors.Wrap(err, "insufficient data from selector 'link_available_for_payment'")
 	}
-	return junotypes.HexToFelt(results[0]).Big(), nil
+	return caigotypes.HexToBN(results[0]), nil
 }
 
 func (c *Client) fetchEventsFromBlock(ctx context.Context, address caigotypes.Hash, eventType string, blockNum uint64) (eventsAsFeltArrs [][]*caigotypes.Felt, err error) {
 	block := caigorpc.WithBlockNumber(blockNum)
 
+	eventKey := caigotypes.BigToHex(caigotypes.GetSelectorFromName(eventType))
+
 	events, err := c.r.Events(ctx, caigorpc.EventFilter{
 		FromBlock: block,
 		ToBlock:   block,
 		Address:   address,
-		// Keys:       []string{},
+		Keys:      []string{eventKey}, // skip other event types
 		// PageSize:   0,
 		// PageNumber: 0,
 	})
@@ -200,24 +200,13 @@ func (c *Client) fetchEventsFromBlock(ctx context.Context, address caigotypes.Ha
 		return eventsAsFeltArrs, errors.Wrap(err, "couldn't fetch events for block")
 	}
 
-	// TODO: use starknet_getEvents and filter fromBlock-toBlock to blockNum, and by address
-
 	for _, event := range events.Events {
-		var decodedEvent caigogw.Event
-
-		m, err := json.Marshal(event)
-		if err != nil {
-			return eventsAsFeltArrs, errors.Wrap(err, "couldn't marshal event")
+		// convert to felts
+		felts := []*caigotypes.Felt{}
+		for _, felt := range event.Data {
+			felts = append(felts, caigotypes.StrToFelt(felt))
 		}
-
-		err = json.Unmarshal(m, &decodedEvent)
-		if err != nil {
-			return eventsAsFeltArrs, errors.Wrap(err, "couldn't unmarshal event")
-		}
-
-		if starknet.IsEventFromContract(&decodedEvent, address, eventType) {
-			eventsAsFeltArrs = append(eventsAsFeltArrs, decodedEvent.Data)
-		}
+		eventsAsFeltArrs = append(eventsAsFeltArrs, felts)
 	}
 	if len(eventsAsFeltArrs) == 0 {
 		return nil, errors.New("events not found in the block")
