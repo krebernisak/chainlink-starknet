@@ -23,7 +23,7 @@ import (
 )
 
 func TestIntegration_Txm(t *testing.T) {
-	url := SetupLocalStarknetNode(t)
+	url := SetupLocalStarknetNode(t) + "/rpc"
 	rawLocalKeys := TestKeys(t, 2) // generate 2 keys
 
 	// parse keys into expected format
