@@ -10,7 +10,7 @@ import (
 
 	junotypes "github.com/NethermindEth/juno/pkg/types"
 
-	"github.com/smartcontractkit/libocr/offchainreporting2/types"
+	"github.com/smartcontractkit/libocr/offchainreporting2plus/types"
 )
 
 type ContractConfigDetails struct {

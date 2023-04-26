@@ -10,7 +10,7 @@ import (
 	"github.com/dontpanicdao/caigo"
 	relayMonitoring "github.com/smartcontractkit/chainlink-relay/pkg/monitoring"
 	relayUtils "github.com/smartcontractkit/chainlink-relay/pkg/utils"
-	"github.com/smartcontractkit/libocr/offchainreporting2/types"
+	"github.com/smartcontractkit/libocr/offchainreporting2plus/types"
 	"go.uber.org/multierr"
 
 	"github.com/smartcontractkit/chainlink-starknet/relayer/pkg/chainlink/ocr2"

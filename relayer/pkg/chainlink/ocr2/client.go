@@ -12,7 +12,7 @@ import (
 
 	caigogw "github.com/dontpanicdao/caigo/gateway"
 	caigotypes "github.com/dontpanicdao/caigo/types"
-	"github.com/smartcontractkit/libocr/offchainreporting2/types"
+	"github.com/smartcontractkit/libocr/offchainreporting2plus/types"
 
 	"github.com/smartcontractkit/chainlink-starknet/relayer/pkg/starknet"
 

@@ -8,7 +8,8 @@ require (
 	github.com/dontpanicdao/caigo v0.4.0
 	github.com/pkg/errors v0.9.1
 	github.com/smartcontractkit/chainlink-relay v0.1.7-0.20230422214339-5fee8d7f3f82
-	github.com/smartcontractkit/libocr v0.0.0-20230413082317-9561d14087cc
+	// WARNING: Experimental version of libocr - do not merge until this is officially released!
+	github.com/smartcontractkit/libocr v0.0.0-20230419212942-1c3f88528944
 	github.com/stretchr/testify v1.8.2
 	golang.org/x/exp v0.0.0-20230307190834-24139beb5833
 )
@@ -48,4 +49,7 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+replace (
+	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
+	github.com/smartcontractkit/chainlink-relay => /Users/sam/code/smartcontractkit/chainlink-relay
+)
