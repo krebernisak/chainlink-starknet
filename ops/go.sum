@@ -280,7 +280,7 @@ github.com/smartcontractkit/chainlink-relay v0.1.7-0.20230422214339-5fee8d7f3f82
 github.com/smartcontractkit/chainlink-testing-framework v1.11.5 h1:gYSnOQhLxgE0mxwnv015nNnPgH9kcosx+AzPboEFo38=
 github.com/smartcontractkit/chainlink-testing-framework v1.11.5/go.mod h1:0ktPcDE5fFSvNewsaHuC4tGVaiCMQsl5RN/cWO5k0rg=
 github.com/smartcontractkit/libocr v0.0.0-20230413082317-9561d14087cc h1:aSCDAai0Dmbhp/KHTtJnC/EJcaEz4CAO80SKRzRZiQA=
-github.com/smartcontractkit/libocr v0.0.0-20230413082317-9561d14087cc/go.mod h1:5JnCHuYgmIP9ZyXzgAfI5Iwu0WxBtBKp+ApeT5o1Cjw=
+github.com/smartcontractkit/libocr v0.0.0-20230413082317-9561d14087cc/go.mod h1:7Pd28puvezPJXB+xRJlcsx5CfzzkFJbMXydaAEsL4E8=
 github.com/spaolacci/murmur3 v0.0.0-20180118202830-f09979ecbc72/go.mod h1:JwIasOWyU6f++ZhiEuf87xNszmSA2myDM2Kzu9HwQUA=
 github.com/spf13/cobra v1.6.0 h1:42a0n6jwCot1pUmomAp4T7DeMD+20LFv4Q54pxLf2LI=
 github.com/spf13/cobra v1.6.0/go.mod h1:IOw/AERYS7UzyrGinqmz6HLUo219MORXGxhbaJUqzrY=
