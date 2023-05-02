@@ -5,7 +5,7 @@ go 1.20
 require (
 	github.com/NethermindEth/juno v0.0.0-20220630151419-cbd368b222ac
 	github.com/btcsuite/btcd/chaincfg/chainhash v1.0.1
-	github.com/dontpanicdao/caigo v0.4.0
+	github.com/dontpanicdao/caigo v0.4.2-0.20221208220941-c8063aace0b1
 	github.com/pkg/errors v0.9.1
 	github.com/smartcontractkit/chainlink-relay v0.1.7-0.20230422214339-5fee8d7f3f82
 	github.com/smartcontractkit/libocr v0.0.0-20230413082317-9561d14087cc

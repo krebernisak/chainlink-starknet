@@ -6,7 +6,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	caigorpc "github.com/dontpanicdao/caigo/rpcv01"
+	caigorpc "github.com/dontpanicdao/caigo/rpcv02"
 	caigotypes "github.com/dontpanicdao/caigo/types"
 	ethrpc "github.com/ethereum/go-ethereum/rpc"
 
@@ -20,7 +20,7 @@ type Reader interface {
 	LatestBlockHeight(context.Context) (uint64, error)
 
 	// provider interface
-	BlockWithTxHashes(ctx context.Context, blockID caigorpc.BlockID) (caigorpc.Block, error)
+	BlockWithTxHashes(ctx context.Context, blockID caigorpc.BlockID) (*caigorpc.Block, error)
 	Call(context.Context, caigotypes.FunctionCall, caigorpc.BlockID) ([]string, error)
 	ChainID(context.Context) (string, error)
 	Events(ctx context.Context, filter caigorpc.EventFilter) (*caigorpc.EventsOutput, error)
@@ -106,7 +106,7 @@ func (c *Client) LatestBlockHeight(ctx context.Context) (height uint64, err erro
 
 // -- caigo.Provider interface --
 
-func (c *Client) BlockWithTxHashes(ctx context.Context, blockID caigorpc.BlockID) (caigorpc.Block, error) {
+func (c *Client) BlockWithTxHashes(ctx context.Context, blockID caigorpc.BlockID) (*caigorpc.Block, error) {
 	if c.defaultTimeout != 0 {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, c.defaultTimeout)
@@ -115,9 +115,9 @@ func (c *Client) BlockWithTxHashes(ctx context.Context, blockID caigorpc.BlockID
 
 	out, err := c.Provider.BlockWithTxHashes(ctx, blockID)
 	if err != nil {
-		return out, errors.Wrap(err, "error in client.BlockWithTxHashes")
+		return out.(*caigorpc.Block), errors.Wrap(err, "error in client.BlockWithTxHashes")
 	}
-	return out, nil
+	return out.(*caigorpc.Block), nil
 }
 
 func (c *Client) Call(ctx context.Context, calls caigotypes.FunctionCall, blockHashOrTag caigorpc.BlockID) ([]string, error) {
@@ -214,7 +214,10 @@ func (c *Client) Events(ctx context.Context, filter caigorpc.EventFilter) (*caig
 		defer cancel()
 	}
 
-	out, err := c.Provider.Events(ctx, filter)
+	out, err := c.Provider.Events(ctx, caigorpc.EventsInput{
+		EventFilter: filter,
+		// TODO: ResultPageRequest: ResultPageRequest { ContinuationToken: , ChunkSize: }
+	})
 	if err != nil {
 		return out, errors.Wrap(err, "error in client.Events")
 	}

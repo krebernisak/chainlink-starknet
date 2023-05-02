@@ -9,7 +9,7 @@ import (
 	junotypes "github.com/NethermindEth/juno/pkg/types"
 	"github.com/pkg/errors"
 
-	caigorpc "github.com/dontpanicdao/caigo/rpcv01"
+	caigorpc "github.com/dontpanicdao/caigo/rpcv02"
 	caigotypes "github.com/dontpanicdao/caigo/types"
 	"github.com/smartcontractkit/libocr/offchainreporting2/types"
 
