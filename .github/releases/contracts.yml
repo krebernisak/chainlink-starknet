@@ -1,0 +1,44 @@
+name: Contracts Release (git distribution)
+
+on:
+  push:
+    tags:        
+      - '*'           # Push events to every tag not containing /
+
+jobs:
+  contracts_build:
+    name: Build contracts
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+        with:
+          submodules: 'recursive'
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@5c11eae19dba042788936d4f1c9685fdd814ac49 # v19
+        with:
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Install Cairo
+        uses: ./.github/actions/install-cairo
+
+      - name: Build
+        run: nix develop -c make build-contracts
+
+      - name: Generate and push release artifacts
+        run: |
+            git config user.name github-actions
+            git config user.email github-actions@github.com
+
+            date > release.txt
+            find contracts/artifacts -print >> release.txt
+            find contracts/target -print >> release.txt
+
+            git add release.txt
+            git add --force contracts/artifacts
+            git add --force contracts/target
+
+            git commit -m "Generate release dist artifacts"
+            git tag dist-${{github.ref_name}}
+            git push origin dist-${{github.ref_name}}
