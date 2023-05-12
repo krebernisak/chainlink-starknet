@@ -99,7 +99,7 @@ build-contracts: build-sol-contracts build-cairo-contracts
 build-sol-contracts:
 	cd contracts/ && \
 		yarn install --frozen-lockfile && \
-		yarn compile:solidity && pwd
+		yarn compile:solidity
 
 # TODO: this should build cairo contracts when they are rewritten
 .PHONY: build-ts-examples
