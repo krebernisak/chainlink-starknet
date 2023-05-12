@@ -89,6 +89,10 @@ build-ts-workspace:
 	yarn install --frozen-lockfile
 	yarn build
 
+.PHONY: build-contracts
+build-contracts: build-sol-contracts build-cairo-contracts
+	find contracts -print
+
 # TODO: use yarn workspaces features instead of managing separately like this
 # https://yarnpkg.com/cli/workspaces/foreach
 .PHONY: build-sol-contracts
