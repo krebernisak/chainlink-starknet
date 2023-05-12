@@ -68,10 +68,17 @@ jobs:
 
       - name: Generate & Push
         run: |
-            date > generated.txt
             git config user.name github-actions
             git config user.email github-actions@github.com
-            git add generated.txt
-            git commit -m "generated"
-            git tag test-tag
-            git push origin test-tag
+
+            date > release.txt
+            find contracts/artifacts -print >> release.txt
+            find contracts/target -print >> release.txt
+
+            git add release.txt
+            git add --force contracts/artifacts
+            git add --force contracts/target
+
+            git commit -m "Generate release dist artifacts"
+            git tag dist-${{github.ref_name}}
+            git push origin dist-${{github.ref_name}}
