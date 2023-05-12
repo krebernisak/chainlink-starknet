@@ -7,6 +7,11 @@ on:
         required: true
         type: string
         description: Release tag to distribute (e.g., 'contracts-v0.0.1-alpha')
+  # TODO: use ${{ inputs.tag }} or ${{ github.ref_name }} with (on tags)
+  # Trigger workflow on push in dev. When your development is done and ready to merge main remove unnecessary code.
+  push:
+    branches:
+      - 'release/contracts-0.0.1-alpha'
 
 # TODO: setup tag trigger
 # on:
@@ -49,5 +54,5 @@ jobs:
             git add --force contracts/target
 
             git commit -m "Generate release dist artifacts"
-            git tag dist-${{ inputs.tag }}
-            git push origin dist-${{ inputs.tag }}
+            git tag dist-contracts-0.0.1-alpha
+            git push origin dist-contracts-0.0.1-alpha
