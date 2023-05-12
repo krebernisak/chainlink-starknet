@@ -89,13 +89,17 @@ build-ts-workspace:
 	yarn install --frozen-lockfile
 	yarn build
 
+.PHONY: build-contracts
+build-contracts: build-sol-contracts build-cairo-contracts
+	find contracts -print
+
 # TODO: use yarn workspaces features instead of managing separately like this
 # https://yarnpkg.com/cli/workspaces/foreach
 .PHONY: build-sol-contracts
 build-sol-contracts:
 	cd contracts/ && \
 		yarn install --frozen-lockfile && \
-		yarn compile:solidity
+		yarn compile:solidity && pwd
 
 # TODO: this should build cairo contracts when they are rewritten
 .PHONY: build-ts-examples
