@@ -1,12 +1,21 @@
 name: Contracts Release (git distribution)
 
 on:
-  push:
-    tags:        
-      - '*'           # Push events to every tag not containing /
+  workflow_dispatch:
+    inputs:
+      tag:
+        required: true
+        type: string
+        description: Release tag to distribute (e.g., 'contracts-v0.0.1-alpha')
+
+# TODO: setup tag trigger
+# on:
+#   push:
+#     tags:        
+#       - '*'           # Push events to every tag not containing /
 
 jobs:
-  contracts_build:
+  contracts_release:
     name: Build contracts
     runs-on: ubuntu-latest
     steps:
@@ -40,5 +49,5 @@ jobs:
             git add --force contracts/target
 
             git commit -m "Generate release dist artifacts"
-            git tag dist-${{github.ref_name}}
-            git push origin dist-${{github.ref_name}}
+            git tag dist-${{ inputs.tag }}
+            git push origin dist-${{ inputs.tag }}
